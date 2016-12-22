@@ -7,6 +7,10 @@ SCREEN_WIDTH = 1200
 SCREEN_HEIGHT = 600
 COIN_POSITION_WIDTH = SCREEN_WIDTH/2
 COIN_POSITION_HEIGHT = SCREEN_HEIGHT/1.5
+P1_W = SCREEN_WIDTH/4
+P1_H = SCREEN_HEIGHT/3
+P2_W = SCREEN_WIDTH*3/4
+P2_H = SCREEN_HEIGHT/3
 
 class BetWindow(arcade.Window) :
     # self.count = 0
@@ -28,6 +32,14 @@ class BetWindow(arcade.Window) :
         self.tailCoin.set_position(COIN_POSITION_WIDTH, COIN_POSITION_HEIGHT)
         self.bg = arcade.Sprite('images/background.jpg')
         self.bg.set_position(SCREEN_WIDTH/2, SCREEN_HEIGHT/2)
+        self.headP1 = arcade.Sprite('images/head.png')
+        self.headP1.set_position(P1_W, P1_H)
+        self.headP2 = arcade.Sprite('images/head.png')
+        self.headP2.set_position(P2_W, P2_H)
+        self.tailP1 = arcade.Sprite('images/tail.png')
+        self.tailP1.set_position(P1_W, P1_H)
+        self.tailP2 = arcade.Sprite('images/tail.png')
+        self.tailP2.set_position(P2_W, P2_H)
 
         self.count = 1
         self.toss = None
@@ -50,8 +62,16 @@ class BetWindow(arcade.Window) :
 
         if self.prevCoin == 0 :
             self.headCoin.draw()
-        elif self.prevCoin == 1:
+        elif self.prevCoin == 1 :
             self.tailCoin.draw()
+        if self.playerI.choose == 0 :
+            self.headP1.draw()
+        elif self.playerI.choose == 1 :
+            self.tailP1.draw()
+        if self.playerII.choose == 0 :
+            self.headP2.draw()
+        elif self.playerII.choose == 1 :
+            self.tailP2.draw()
 
     def animate(self, delta) :
         # print(2)
