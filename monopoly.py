@@ -49,13 +49,14 @@ class BetWindow(arcade.Window) :
             print("Current money of PlayerI:",self.playerI.money)
             print("Current money of PlayerII:",self.playerII.money)
             print(self.toss)
+        # self.count += 1
+        elif self.count != 0 :
+            self.whoWin()
+            self.reset()
         self.count += 1
-        # elif self.count != 0 :
-        #     self.whoWin()
-        #     self.reset()
 
         # self.toss = self.coinToss()
-        # print(self.toss)
+        print(self.toss)
 
     def coinToss(self) :
         self.toss = randint(0,1)
@@ -75,7 +76,7 @@ class BetWindow(arcade.Window) :
     def reset(self) :
         self.playerI = Player(self)
         self.playerII = Player(self)
-        count = 0
+        self.count = 0
 
 class Player() :
     def __init__(self,betWindow) :
