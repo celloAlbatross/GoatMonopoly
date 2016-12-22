@@ -2,7 +2,7 @@ import arcade
 from random import randint
 
 GAME_TITLE = "Goat Monopoly"
-SCREEN_WIDTH = 1200
+SCREEN_WIDTH = 600
 SCREEN_HEIGHT = 600
 COIN_POSITION_WIDTH = SCREEN_WIDTH/2
 COIN_POSITION_HEIGHT = SCREEN_HEIGHT/1.5
@@ -18,14 +18,18 @@ class BetWindow(arcade.Window) :
 
         self.headCoin = arcade.Sprite('images/head.png')
         self.headCoin.set_position(COIN_POSITION_WIDTH, COIN_POSITION_HEIGHT)
+        self.tailCoin = arcade.Sprite('images/tail.png')
+        self.tailCoin.set_position(COIN_POSITION_WIDTH, COIN_POSITION_HEIGHT)
 
         self.playerI = Player(self)
         self.playerII = Player(self)
 
     def on_draw(self) :
         arcade.start_render()
-        if self.toss == 1 :
+        if self.toss == 0 :
             self.headCoin.draw()
+        elif self.toss == 1 :
+            self.tailCoin.draw()
 
     def animate(self, delta) :
         if self.count > 0 and self.count < 11:
@@ -56,7 +60,7 @@ class BetWindow(arcade.Window) :
         self.count += 1
 
         # self.toss = self.coinToss()
-        print(self.toss)
+        # print(self.toss)
 
     def coinToss(self) :
         self.toss = randint(0,1)
