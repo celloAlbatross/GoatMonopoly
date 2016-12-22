@@ -2,7 +2,7 @@ import arcade
 from random import randint
 
 GAME_TITLE = "Goat Monopoly"
-SCREEN_WIDTH = 600
+SCREEN_WIDTH = 1200
 SCREEN_HEIGHT = 600
 COIN_POSITION_WIDTH = SCREEN_WIDTH/2
 COIN_POSITION_HEIGHT = SCREEN_HEIGHT/1.5
@@ -20,12 +20,18 @@ class BetWindow(arcade.Window) :
         self.headCoin.set_position(COIN_POSITION_WIDTH, COIN_POSITION_HEIGHT)
         self.tailCoin = arcade.Sprite('images/tail.png')
         self.tailCoin.set_position(COIN_POSITION_WIDTH, COIN_POSITION_HEIGHT)
+        self.bg = arcade.Sprite('images/background.jpg')
+        self.bg.set_position(SCREEN_WIDTH/2, SCREEN_HEIGHT/2)
 
-        self.playerI = Player(self)
-        self.playerII = Player(self)
+        self.initTwoPlayer()
+        # self.playerI = Player(self)
+        # self.playerI.playerName = "Player I"
+        # self.playerII = Player(self)
+        # self.playerII.playerName = "Player II"
 
     def on_draw(self) :
         arcade.start_render()
+        self.bg.draw()
         if self.toss == 0 :
             self.headCoin.draw()
         elif self.toss == 1 :
@@ -34,33 +40,34 @@ class BetWindow(arcade.Window) :
     def animate(self, delta) :
         if self.count > 0 and self.count < 11:
             self.coinToss()
-            while self.playerI.choose != "1" and self.playerI.choose != "0" :
-                self.playerI.choose = input("PlayerI Choose 0 or 1: ")
-            while self.playerII.choose != "1" and self.playerII.choose != "0" :
-                self.playerII.choose = input("playerII Choose 0 or 1: ")
-            self.playerI.choose = int(self.playerI.choose)
-            self.playerII.choose = int(self.playerII.choose)
-            self.playerI.money -= 1000;
-            self.playerII.money -= 1000;
-            if self.toss == self.playerI.choose :
-                print("playerI get 1000")
-                self.playerI.money += 2000
-                # print("Current money of PlayerI:",self.playerI.money)
-            if self.toss == self.playerII.choose :
-                print("playerII get 1000")
-                self.playerII.money += 2000
-                # print("Current money of PlayerI:",self.playerII.money)
+
+            self.chooseToss(self.playerI)
+            self.chooseToss(self.playerII)
+
+            self.getMoney(self.playerI)
+            self.getMoney(self.playerII)
+
             print("Current money of PlayerI:",self.playerI.money)
             print("Current money of PlayerII:",self.playerII.money)
             print(self.toss)
-        # self.count += 1
+
         elif self.count != 0 :
             self.whoWin()
             self.reset()
         self.count += 1
 
-        # self.toss = self.coinToss()
-        # print(self.toss)
+    def getMoney(self,player) :
+        if self.toss == player.choose :
+            print(player.playerName,"get 1000")
+            player.money += 2000
+
+    def chooseToss(self,player) :
+        while player.choose != "1" and player.choose != "0" :
+            print(player.playerName, end = " ")
+            player.choose = input("Choose 0 or 1: ")
+
+        player.choose = int(player.choose)
+        player.money -= 1000
 
     def coinToss(self) :
         self.toss = randint(0,1)
@@ -78,14 +85,24 @@ class BetWindow(arcade.Window) :
             print("----------------------------------")
 
     def reset(self) :
-        self.playerI = Player(self)
-        self.playerII = Player(self)
+        # self.playerI = Player(self)
+        # self.playerII = Player(self)
+        self.initTwoPlayer()
         self.count = 0
+
+    def initTwoPlayer(self) :
+        self.playerI = Player(self)
+        self.playerI.playerName = "Player I"
+        self.playerII = Player(self)
+        self.playerII.playerName = "Player II"
+
 
 class Player() :
     def __init__(self,betWindow) :
         self.money = 10000
         self.choose = None
+        self.playerName = None
+
 
 if __name__ == '__main__' :
     window = BetWindow(SCREEN_WIDTH, SCREEN_HEIGHT)
