@@ -59,6 +59,7 @@ class BetWindow(arcade.Window) :
         self.prevCoin = None
         self.winShow = None
         self.timer = 0
+        self.round = 0
 
         self.initTwoPlayer()
         # self.playerI = Player(self)
@@ -91,6 +92,7 @@ class BetWindow(arcade.Window) :
                 self.noob.draw()
         arcade.draw_text(str(self.playerI.money), P1_W-50, P1_H-150, arcade.color.CANDY_PINK, 30)
         arcade.draw_text(str(self.playerII.money), P2_W-50, P2_H-150, arcade.color.ARMY_GREEN, 30)
+        arcade.draw_text(str(self.round), 50, SCREEN_HEIGHT-100, arcade.color.RED, 30)
 
     def animate(self, delta) :
         # print(2)
@@ -104,6 +106,7 @@ class BetWindow(arcade.Window) :
             if self.stateCoinToss :
                 self.coinToss()
                 self.count += 1
+                self.round += 1
                 self.stateCoinToss = 0
                 self.stateChooseToss = 1
 
@@ -174,6 +177,7 @@ class BetWindow(arcade.Window) :
         self.statePrintCurrent = 0
         self.prevCoin = None
         self.stateWin = 0
+        self.round = 0
 
     def initTwoPlayer(self) :
         self.playerI = Player(self)
