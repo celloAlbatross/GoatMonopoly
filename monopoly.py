@@ -40,6 +40,13 @@ class BetWindow(arcade.Window) :
         self.tailP1.set_position(P1_W, P1_H)
         self.tailP2 = arcade.Sprite('images/tail.png')
         self.tailP2.set_position(P2_W, P2_H)
+        self.winP1 = arcade.Sprite('images/player1win.png')
+        self.winP1.set_position(SCREEN_WIDTH/2, SCREEN_HEIGHT/2)
+        self.winP2 = arcade.Sprite('images/player2win.png')
+        self.winP2.set_position(SCREEN_WIDTH/2, SCREEN_HEIGHT/2)
+        self.noob = arcade.Sprite('images/noob.jpg')
+        self.noob.set_position(SCREEN_WIDTH/2, SCREEN_HEIGHT/2)
+
 
         self.count = 1
         self.toss = None
@@ -48,7 +55,10 @@ class BetWindow(arcade.Window) :
         self.stateCoinToss = 1
         self.stateChooseToss = 0
         self.statePrintCurrent = 0
+        self.stateWin = 0
         self.prevCoin = None
+        self.winShow = None
+        self.timer = 0
 
         self.initTwoPlayer()
         # self.playerI = Player(self)
@@ -72,23 +82,33 @@ class BetWindow(arcade.Window) :
             self.headP2.draw()
         elif self.playerII.choose == 1 :
             self.tailP2.draw()
+        if self.stateWin :
+            if self.whoWin() == 0 :
+                self.winP1.draw()
+            elif self.whoWin() == 1 :
+                self.winP2.draw()
+            elif self.whoWin() == 2 :
+                self.noob.draw()
 
     def animate(self, delta) :
         # print(2)
+
+        self.timer += delta
+        self.sec = int(self.timer)
+        # print(self.sec)
+
         if self.count > 0 and self.count < 11 :
-            # print(self.stateCoinToss)
+
             if self.stateCoinToss :
-                # self.canIDraw = 0
                 self.coinToss()
                 self.count += 1
                 self.stateCoinToss = 0
                 self.stateChooseToss = 1
-                # print(1)
 
-            # self.chooseToss(self.playerI, self.chooseI)
-            # self.chooseToss(self.playerII, self.chooseII)
             if self.stateChooseToss:
                 if self.chooseI == 1 and self.chooseII == 1 :
+                    self.playerI.money -= 1000
+                    self.playerII.money -= 1000
                     self.getMoney(self.playerI)
                     self.getMoney(self.playerII)
                     self.stateChooseToss = 0
@@ -102,28 +122,24 @@ class BetWindow(arcade.Window) :
                 print("Current money of PlayerII:",self.playerII.money)
                 print(self.toss)
                 self.statePrintCurrent = 0
+                # self.stateCoinToss = 0
+                # self.stateWin = 1
+                self.currentTime = self.sec
+                print(self.count)
                 self.stateCoinToss = 1
 
-        elif self.count != 0 :
+        elif self.count > 10 :
             self.whoWin()
-            self.reset()
-        # self.count += 1
+            self.stateWin = 1
+            if self.stateWin :
+                if self.sec - self.currentTime == 3 :
+                    self.stateWin = 0
+                    self.reset()
 
     def getMoney(self,player) :
         if self.toss == player.choose :
             print(player.playerName,"get 1000")
             player.money += 2000
-
-    def chooseToss(self,player,choose) :
-        # while player.choose != "1" and player.choose != "0" :
-            # print(player.playerName, end = " ")
-            # player.choose = input("Choose 0 or 1: ")
-
-        #while choose != 1 :
-            #x=1
-        # player.choose = int(player.choose)
-        # player.choose = None
-        player.money -= 1000
 
     def coinToss(self) :
         self.toss = randint(0,1)
@@ -133,18 +149,20 @@ class BetWindow(arcade.Window) :
         if self.playerI.money > self.playerII.money :
             print("PlayerII Win !!")
             print("----------------------------------")
+            self.winShow = 1
+            return 1
         elif self.playerII.money > self.playerI.money :
             print("PlayerI Win !!")
             print("----------------------------------")
+            self.winShow = 0
+            return 0
         else :
             print("Draw!! you two noob")
             print("----------------------------------")
+            return 2
 
     def reset(self) :
-        # self.playerI = Player(self)
-        # self.playerII = Player(self)
         self.initTwoPlayer()
-        # self.count = 0
         self.count = 1
         self.toss = None
         self.chooseI = None
@@ -153,6 +171,7 @@ class BetWindow(arcade.Window) :
         self.stateChooseToss = 0
         self.statePrintCurrent = 0
         self.prevCoin = None
+        self.stateWin = 0
 
     def initTwoPlayer(self) :
         self.playerI = Player(self)
@@ -177,7 +196,7 @@ class BetWindow(arcade.Window) :
 class Player() :
     def __init__(self,betWindow) :
         self.money = 10000
-        self.choose = None
+        self.choose = 0
         self.playerName = None
 
 
