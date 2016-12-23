@@ -89,6 +89,8 @@ class BetWindow(arcade.Window) :
                 self.winP2.draw()
             elif self.whoWin() == 2 :
                 self.noob.draw()
+        arcade.draw_text(str(self.playerI.money), P1_W-50, P1_H-150, arcade.color.CANDY_PINK, 30)
+        arcade.draw_text(str(self.playerII.money), P2_W-50, P2_H-150, arcade.color.ARMY_GREEN, 30)
 
     def animate(self, delta) :
         # print(2)
@@ -132,7 +134,7 @@ class BetWindow(arcade.Window) :
             self.whoWin()
             self.stateWin = 1
             if self.stateWin :
-                if self.sec - self.currentTime == 3 :
+                if self.sec - self.currentTime == 5 :
                     self.stateWin = 0
                     self.reset()
 
